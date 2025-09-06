@@ -6,15 +6,20 @@ import React from "react";
 type Project = {
     id: number;
     title: string;
-    description: string;
+    description?: string;
     image?: string;
-    category: string;
-    tags: string[];
-    liveUrl: string;
+    category?: string;
+    tags?: string[];
+    liveUrl?: string;
     featured?: boolean;
 };
 
 const ProjectItem: React.FC<{ project: Project }> = ({ project }) => {
+    const description = project.description ?? "";
+    const category = project.category ?? "Uncategorized";
+    const tags = project.tags ?? [];
+    const liveUrl = project.liveUrl ?? "#";
+
     return (
         <div
             className={cn(
@@ -57,7 +62,7 @@ const ProjectItem: React.FC<{ project: Project }> = ({ project }) => {
             <div className="p-6">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                        {project.category}
+                        {category}
                     </span>
                 </div>
 
@@ -66,12 +71,12 @@ const ProjectItem: React.FC<{ project: Project }> = ({ project }) => {
                 </h3>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {project.description}
+                    {description}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tags.map((tag) => (
+                    {tags.map((tag) => (
                         <span
                             key={tag}
                             className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"
@@ -84,7 +89,7 @@ const ProjectItem: React.FC<{ project: Project }> = ({ project }) => {
                 {/* Actions */}
                 <div className="flex gap-2">
                     <Button asChild size="sm" className="flex-1">
-                        <Link href={project.liveUrl}>View Live</Link>
+                        <Link href={liveUrl}>View Live</Link>
                     </Button>
                     <Button asChild variant="outline" size="sm">
                         <Link href={`/projects/${project.id}`}>Details</Link>

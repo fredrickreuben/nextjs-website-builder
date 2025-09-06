@@ -3,7 +3,8 @@ import Header from "@/components/layout/header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { Toaster } from "@/components/ui/sonner";
+ 
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -30,9 +31,12 @@ const RootLayout: React.FC<{
 }> = ({ children }) => {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
                 <Header />
                 <main className="min-h-screen">{children}</main>
+                <Toaster richColors closeButton position="top-right" />
                 <Footer />
             </body>
         </html>

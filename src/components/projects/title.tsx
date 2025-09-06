@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
+
+import CreateProjectModal from "@/components/projects/create";
 import React from "react";
 
 const ProjectsTitle: React.FC = () => {
@@ -13,9 +14,7 @@ const ProjectsTitle: React.FC = () => {
                 Explore stunning websites created with our platform. Get
                 inspired by real projects and see what's possible.
             </p>
-            <Button asChild size="lg">
-                <Link href="/get-started">Start Your Project</Link>
-            </Button>
+            <CreateProjectModal />
         </div>
     );
 };

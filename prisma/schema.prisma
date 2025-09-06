@@ -15,11 +15,16 @@ datasource db {
 }
 
 model Project {
-  id        Int      @id @default(autoincrement())
-  title     String
-  userId    Int      @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String? 
+  category    String?
+  tags        String?   // stored as comma-separated values
+  liveUrl     String?   @map("live_url")
+  featured    Boolean   @default(false)
+  userId      Int       @map("user_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   // Composite index: user_id + created_at (created_at sorted descending)
   @@index([userId, createdAt(sort: Desc)], name: "idx_user_created_desc")
