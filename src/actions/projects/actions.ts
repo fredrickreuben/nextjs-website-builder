@@ -107,7 +107,7 @@ export const getProjects = async (options?: {
     limit?: number;
     offset?: number;
 }) => {
-    
+
     try {
         const where: any = {};
 
@@ -142,8 +142,15 @@ export const getProjectById = async (id: number) => {
 
         const project = await prisma.project.findUnique({
             where: { id: validatedId },
+            include: {
+                sections: {
+                    orderBy: { position: 'asc' },
+                    include: {
+                        text: true
+                    }
+                }
+            }
         });
-
         if (!project) {
             return { success: false, error: "Project not found." };
         }

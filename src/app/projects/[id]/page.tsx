@@ -1,6 +1,8 @@
 import { getProjectById } from "@/actions/projects/actions";
 import SectionButton from "@/components/builder/SectionButton";
-import Container from "@/components/layout/container";
+import ProjectFooter from "@/components/projects/footer";
+import ProjectHeader from "@/components/projects/header";
+import SectionList from "@/components/projects/sections";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -53,31 +55,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         : [];
 
     return (
-        <Container className="py-16">
+        <div className="py-16">
+            <ProjectHeader
+                title={project.title}
+                description={project.description}
+                tags={tags}
+            />
+            <SectionButton />
+            
+            <SectionList sections={project.sections || []} />
+
             <SectionButton />
 
-            {/* Project Content */}
-            <div className="mt-8">
-                <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
-                {project.description && (
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
-                        {project.description}
-                    </p>
-                )}
-
-                {tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                        {tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded-full"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </Container>
+            <ProjectFooter />
+        </div>
     );
 }
