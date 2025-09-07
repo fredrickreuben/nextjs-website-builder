@@ -107,6 +107,7 @@ export const getProjects = async (options?: {
     limit?: number;
     offset?: number;
 }) => {
+    
     try {
         const where: any = {};
 

@@ -14,20 +14,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SectionType {
+  Text
+  Image
+  Video
+  TextImage
+  Layout
+}
+
 model Project {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
-  description String? 
+  description String?
   category    String?
-  tags        String?   // stored as comma-separated values
-  liveUrl     String?   @map("live_url")
-  featured    Boolean   @default(false)
-  userId      Int       @map("user_id")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  tags        String? // stored as comma-separated values
+  liveUrl     String?  @map("live_url")
+  featured    Boolean  @default(false)
+  userId      Int      @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sections Section[]
 
   // Composite index: user_id + created_at (created_at sorted descending)
   @@index([userId, createdAt(sort: Desc)], name: "idx_user_created_desc")
-
   @@map("projects")
+}
+
+model Section {
+  id        Int         @id @default(autoincrement())
+  type      SectionType
+  position     Int         @default(0)
+  projectId Int         @map("project_id")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  text    Text?
+
+  // Index for efficient querying by project
+  @@index([projectId(sort: Asc)], name: "idx_project_sections")
+  @@map("sections")
+}
+
+model Text {
+  id        Int      @id @default(autoincrement())
+  content   String   @default("<h1>Your Heading</h1><p>Enter your text here...</p>")
+  sectionId Int      @unique @map("section_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("texts")
 }

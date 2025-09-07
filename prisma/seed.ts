@@ -118,11 +118,28 @@ export async function run(): Promise<any[]> {
                 liveUrl: p.liveUrl ?? undefined,
                 featured: p.featured ?? false,
                 userId: p.userId,
+                sections: {
+                    create: {
+                        type: "Text",
+                        position: 0,
+                        text: {
+                            create: {
+                                content: `<h1>Welcome to ${p.title}</h1><p>This is a sample text section for your project. You can edit this content to match your needs.</p>`
+                            }
+                        }
+                    }
+                }
             },
+            include: {
+                sections:{
+                    include:{
+                        text:true
+                    }
+                }
+            }
         });
         created.push(project);
     }
-
     // Return the created projects (exactly 10)
     return created;
 }
