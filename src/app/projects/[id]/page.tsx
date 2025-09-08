@@ -1,8 +1,7 @@
 import { getProjectById } from "@/actions/projects/actions";
-import SectionButton from "@/components/builder/SectionButton";
+import PageBuilder from "@/components/builder";
 import ProjectFooter from "@/components/projects/footer";
 import ProjectHeader from "@/components/projects/header";
-import SectionList from "@/components/projects/sections";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -15,7 +14,8 @@ interface ProjectPageProps {
 export async function generateMetadata({
     params,
 }: ProjectPageProps): Promise<Metadata> {
-    const result = await getProjectById(parseInt(params.id));
+    const { id } = await params;
+    const result = await getProjectById(parseInt(id));
 
     if (!result.success || !result.data) {
         return {
@@ -38,7 +38,8 @@ export async function generateMetadata({
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-    const result = await getProjectById(parseInt(params.id));
+    const { id } = await params;
+    const result = await getProjectById(parseInt(id));
 
     if (!result.success || !result.data) {
         notFound();
@@ -61,11 +62,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 description={project.description}
                 tags={tags}
             />
-            <SectionButton />
-            
-            <SectionList sections={project.sections || []} />
-
-            <SectionButton />
+            <PageBuilder project={project} />
 
             <ProjectFooter />
         </div>

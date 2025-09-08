@@ -1,47 +1,65 @@
-import Container from "@/components/layout/container";
+import SectionButton from "@/components/builder/SectionButton";
 import { Section, Text } from "@/generated/prisma/client";
-import TextEditor from "./text/editor";
+import SectionContainer from "./container";
 
 interface SectionListProps {
     sections: (Section & { text: Text | null })[];
+    onSectionSelect?: (type: string, position: number) => void;
+    onTextUpdate?: (sectionId: number | undefined, content: string) => void;
+    onSectionRemove?: (sectionId: number | undefined, position: number) => void;
+    isCreating?: boolean;
 }
 
-const SectionList = ({ sections }: SectionListProps) => {
+const SectionList = ({
+    sections,
+    onSectionSelect,
+    onTextUpdate,
+    onSectionRemove,
+    isCreating = false,
+}: SectionListProps) => {
     if (!sections || sections.length === 0) {
         return null;
     }
 
+    const handleTextUpdate = (
+        sectionId: number | undefined,
+        content: string
+    ) => {
+        if (onTextUpdate) {
+            onTextUpdate(sectionId, content);
+        }
+    };
+
+    const handleSectionRemove = (
+        sectionId: number | undefined,
+        position: number
+    ) => {
+        if (onSectionRemove) {
+            onSectionRemove(sectionId, position);
+        }
+    };
+
     return (
-        <ul className="space-y-4 mt-8">
-            {sections.map((section) => (
-                <li key={section.id}>
-                    <Container asChild>
-                        <section className="border rounded-lg p-6">
-                            {section.type === "Text" && section.text && (
-                                <TextEditor
-                                    text={section.text}
-                                />
-                            )}
-                            {section.type === "Image" && (
-                                <div className="text-gray-500">
-                                    Image section (not implemented yet)
-                                </div>
-                            )}
-                            {section.type === "Video" && (
-                                <div className="text-gray-500">
-                                    Video section (not implemented yet)
-                                </div>
-                            )}
-                            {section.type === "Layout" && (
-                                <div className="text-gray-500">
-                                    Layout section (not implemented yet)
-                                </div>
-                            )}
-                        </section>
-                    </Container>
-                </li>
-            ))}
-        </ul>
+        <div className="px-16">
+            <ul className="space-y-4 mt-8">
+                {sections.map((section, index) => (
+                    <li key={section.id}>
+                        {/* SectionButton before each section (for inserting at that position) */}
+                        <SectionButton
+                            position={index}
+                            onSectionSelect={onSectionSelect}
+                            disabled={isCreating}
+                        />
+                        <SectionContainer
+                            section={section}
+                            index={index}
+                            onTextUpdate={handleTextUpdate}
+                            onSectionRemove={handleSectionRemove}
+                        />
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };
 
