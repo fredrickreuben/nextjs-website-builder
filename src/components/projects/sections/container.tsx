@@ -1,13 +1,16 @@
 import Container from "@/components/layout/container";
 import { Section, Text } from "@/generated/prisma/client";
-import TextEditor from "./text/editor";
 import SectionMenu from "./menu";
+import TextEditor from "./text/editor";
 
 interface SectionContainerProps {
     section: Section & { text: Text | null };
     index: number;
     onTextUpdate?: (sectionId: number | undefined, content: string) => void;
     onSectionRemove?: (sectionId: number | undefined, position: number) => void;
+    editable?: boolean;
+    onEditableChange?: (sectionId: number) => void;
+    onDisableEditing?: () => void;
 }
 
 const SectionContainer = ({
@@ -15,6 +18,9 @@ const SectionContainer = ({
     index,
     onTextUpdate,
     onSectionRemove,
+    editable = false,
+    onEditableChange,
+    onDisableEditing,
 }: SectionContainerProps) => {
     const handleTextUpdate = (sectionId: number, content: string) => {
         if (onTextUpdate) {
@@ -33,7 +39,10 @@ const SectionContainer = ({
             <Container className="relative">
                 {/* Floating menu - appears on hover */}
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-in-out">
-                    <SectionMenu onSectionRemove={handleSectionRemove} />
+                    <SectionMenu
+                        onSectionRemove={handleSectionRemove}
+                        onEditableChange={section.type === "Text" && onEditableChange ? () => onEditableChange(section.id) : undefined}
+                    />
                 </div>
 
                 <div className="p-6">
@@ -43,6 +52,9 @@ const SectionContainer = ({
                             onUpdate={(content) =>
                                 handleTextUpdate(section.id, content)
                             }
+                            editable={editable}
+                            onEditableChange={onEditableChange ? () => onEditableChange(section.id) : undefined}
+                            onDisableEditing={onDisableEditing}
                         />
                     )}
 

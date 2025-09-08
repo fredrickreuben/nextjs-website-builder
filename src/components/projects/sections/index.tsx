@@ -8,6 +8,9 @@ interface SectionListProps {
     onTextUpdate?: (sectionId: number | undefined, content: string) => void;
     onSectionRemove?: (sectionId: number | undefined, position: number) => void;
     isCreating?: boolean;
+    onEditableChange?: (sectionId: number) => void;
+    onDisableEditing?: () => void;
+    editingSectionId?: number | null;
 }
 
 const SectionList = ({
@@ -16,6 +19,9 @@ const SectionList = ({
     onTextUpdate,
     onSectionRemove,
     isCreating = false,
+    onEditableChange,
+    onDisableEditing,
+    editingSectionId,
 }: SectionListProps) => {
     if (!sections || sections.length === 0) {
         return null;
@@ -55,6 +61,9 @@ const SectionList = ({
                             index={index}
                             onTextUpdate={handleTextUpdate}
                             onSectionRemove={handleSectionRemove}
+                            editable={(section.id && section.id !== 0 ? section.id : index) === editingSectionId}
+                            onEditableChange={onEditableChange ? () => onEditableChange(section.id && section.id !== 0 ? section.id : index) : undefined}
+                            onDisableEditing={onDisableEditing}
                         />
                     </li>
                 ))}

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,14 +9,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface SectionMenuProps {
     onSectionRemove?: () => void;
+    onEditableChange?: () => void;
 }
 
-const SectionMenu = ({ onSectionRemove }: SectionMenuProps) => {
+const SectionMenu = ({
+    onSectionRemove,
+    onEditableChange,
+}: SectionMenuProps) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleRemoveClick = () => {
@@ -30,6 +34,16 @@ const SectionMenu = ({ onSectionRemove }: SectionMenuProps) => {
     return (
         <>
             <div className="flex flex-col space-y-1">
+                {onEditableChange && (
+                    <Button
+                        variant="default"
+                        size="icon"
+                        onClick={onEditableChange}
+                        className="shadow-md hover:shadow-lg transition-shadow duration-200"
+                    >
+                        <Pencil className="h-4 w-4" />
+                    </Button>
+                )}
                 <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <AlertDialogTrigger asChild>
                         <Button
@@ -44,12 +58,16 @@ const SectionMenu = ({ onSectionRemove }: SectionMenuProps) => {
                         <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the section.
+                                This action cannot be undone. This will
+                                permanently delete the section.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleRemoveClick} className="bg-red-600 hover:bg-red-700">
+                            <AlertDialogAction
+                                onClick={handleRemoveClick}
+                                className="bg-red-600 hover:bg-red-700"
+                            >
                                 Remove Section
                             </AlertDialogAction>
                         </AlertDialogFooter>

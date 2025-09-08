@@ -29,6 +29,7 @@ const PageBuilder = ({ project }: PageBuilderProps) => {
     const [sections, setSections] = useState<SectionState[]>([]);
     const [isSaving, setIsSaving] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
 
     // Initialize sections from project data
     useEffect(() => {
@@ -174,6 +175,16 @@ const PageBuilder = ({ project }: PageBuilderProps) => {
         setHasUnsavedChanges(true);
     };
 
+    // Handle enabling editing for a section
+    const handleEditableChange = (sectionId: number) => {
+        setEditingSectionId(sectionId);
+    };
+
+    // Handle disabling editing
+    const handleDisableEditing = () => {
+        setEditingSectionId(null);
+    };
+
     const getNextPosition = () => {
         if (sections.length === 0) return 0;
         return Math.max(...sections.map((s) => s.position)) + 1;
@@ -216,6 +227,9 @@ const PageBuilder = ({ project }: PageBuilderProps) => {
                 onTextUpdate={handleTextUpdate}
                 onSectionRemove={handleSectionRemove}
                 isCreating={isSaving}
+                onEditableChange={handleEditableChange}
+                onDisableEditing={handleDisableEditing}
+                editingSectionId={editingSectionId}
             />
 
             <SectionButton
